@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    
+    <!-- Background -->
+    <path
+        android:fillColor="#E5E7EB"
+        android:pathData="M0,0h200v200h-200z"/>
+    
+    <!-- Mountains/Hills -->
+    <path
+        android:fillColor="#D1D5DB"
+        android:pathData="M0,120 Q50,80 100,120 T200,120 L200,200 L0,200 Z"/>
+    
+    <!-- Circle (representing sun/moon) -->
+    <path
+        android:fillColor="#F3F4F6"
+        android:pathData="M60,45 A15,15 0 1,1 60,75 A15,15 0 1,1 60,45 Z"/>
+    
+    <!-- Central large hill -->
+    <path
+        android:fillColor="#D1D5DB"
+        android:pathData="M80,100 Q140,40 200,100 L200,200 L80,200 Z"/>
+</vector>
