@@ -34,9 +34,11 @@ fun PokemonCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             val pokemonId = pokemon.url.split("/").dropLast(1).last().toIntOrNull() ?: 1
-            val imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$pokemonId.png"
-            val fallbackUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$pokemonId.png"
-            
+            val imageUrl =
+                "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$pokemonId.png"
+            val fallbackUrl =
+                "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$pokemonId.png"
+
             PokemonImage(
                 imageUrl = imageUrl,
                 contentDescription = pokemon.name,
@@ -45,13 +47,13 @@ fun PokemonCard(
                 contentScale = ContentScale.Crop,
                 fallbackUrl = fallbackUrl
             )
-            
+
             Spacer(modifier = Modifier.width(Dimens.spacingMedium))
-            
+
             Column {
                 Text(
-                    text = pokemon.name.replaceFirstChar { 
-                        if (it.isLowerCase()) it.titlecase() else it.toString() 
+                    text = pokemon.name.replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase() else it.toString()
                     },
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium

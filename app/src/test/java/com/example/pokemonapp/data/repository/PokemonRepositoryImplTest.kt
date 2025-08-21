@@ -43,7 +43,7 @@ class PokemonRepositoryImplTest {
 
     @Test
     fun `getPokemonList returns pokemon list when API call succeeds`() = runTest {
-        // Given
+
         val mockResponse = PokemonListResponse(
             count = 100,
             next = null,
@@ -57,10 +57,8 @@ class PokemonRepositoryImplTest {
         
         doReturn(mockResponse).`when`(mockApiService).getPokemonList(100, 0)
 
-        // When
         val result = repository.getPokemonList(100, 0)
 
-        // Then
         assertEquals(3, result.size)
         assertEquals("bulbasaur", result[0].name)
         assertEquals("ivysaur", result[1].name)
@@ -70,33 +68,29 @@ class PokemonRepositoryImplTest {
 
     @Test
     fun `getPokemonList returns empty list when API call fails`() = runTest {
-        // Given
+
         doThrow(RuntimeException("Network error")).`when`(mockApiService).getPokemonList(100, 0)
 
-        // When
         val result = repository.getPokemonList(100, 0)
 
-        // Then
         assertTrue(result.isEmpty())
         verify(mockApiService).getPokemonList(100, 0)
     }
 
     @Test
     fun `getPokemonList returns empty list when API call throws exception`() = runTest {
-        // Given
+
         doThrow(RuntimeException("Any exception")).`when`(mockApiService).getPokemonList(100, 0)
 
-        // When
         val result = repository.getPokemonList(100, 0)
 
-        // Then
         assertTrue(result.isEmpty())
         verify(mockApiService).getPokemonList(100, 0)
     }
 
     @Test
     fun `getPokemonList with custom limit and offset calls API correctly`() = runTest {
-        // Given
+
         val mockResponse = PokemonListResponse(
             count = 20,
             next = null,
@@ -108,10 +102,8 @@ class PokemonRepositoryImplTest {
         
         doReturn(mockResponse).`when`(mockApiService).getPokemonList(20, 10)
 
-        // When
         val result = repository.getPokemonList(20, 10)
 
-        // Then
         assertEquals(1, result.size)
         assertEquals("pikachu", result[0].name)
         verify(mockApiService).getPokemonList(20, 10)
@@ -119,7 +111,7 @@ class PokemonRepositoryImplTest {
 
     @Test
     fun `getPokemonDetail returns pokemon detail when API call succeeds`() = runTest {
-        // Given
+
         val mockPokemonDetail = PokemonDetail(
             id = 25,
             name = "pikachu",
@@ -133,10 +125,8 @@ class PokemonRepositoryImplTest {
         
         doReturn(mockPokemonDetail).`when`(mockApiService).getPokemonDetail(25)
 
-        // When
         val result = repository.getPokemonDetail(25)
 
-        // Then
         assertEquals(25, result.id)
         assertEquals("pikachu", result.name)
         assertEquals(4, result.height)
@@ -146,7 +136,7 @@ class PokemonRepositoryImplTest {
 
     @Test
     fun `getPokemonDetailByName returns pokemon detail when API call succeeds`() = runTest {
-        // Given
+
         val mockPokemonDetail = PokemonDetail(
             id = 25,
             name = "pikachu",
@@ -160,10 +150,8 @@ class PokemonRepositoryImplTest {
         
         doReturn(mockPokemonDetail).`when`(mockApiService).getPokemonDetailByName("pikachu")
 
-        // When
         val result = repository.getPokemonDetailByName("pikachu")
 
-        // Then
         assertEquals(25, result.id)
         assertEquals("pikachu", result.name)
         verify(mockApiService).getPokemonDetailByName("pikachu")
@@ -171,7 +159,7 @@ class PokemonRepositoryImplTest {
 
     @Test
     fun `getPokemonDetailByName handles case insensitive names`() = runTest {
-        // Given
+
         val mockPokemonDetail = PokemonDetail(
             id = 25,
             name = "pikachu",
@@ -185,30 +173,26 @@ class PokemonRepositoryImplTest {
         
         doReturn(mockPokemonDetail).`when`(mockApiService).getPokemonDetailByName("Pikachu")
 
-        // When
         val result = repository.getPokemonDetailByName("Pikachu")
 
-        // Then
         assertEquals("pikachu", result.name)
         verify(mockApiService).getPokemonDetailByName("Pikachu")
     }
 
     @Test
     fun `repository handles null API responses gracefully`() = runTest {
-        // Given
+
         doReturn(null).`when`(mockApiService).getPokemonList(100, 0)
 
-        // When
         val result = repository.getPokemonList(100, 0)
 
-        // Then
         assertTrue(result.isEmpty())
         verify(mockApiService).getPokemonList(100, 0)
     }
 
     @Test
     fun `repository handles empty API responses gracefully`() = runTest {
-        // Given
+
         val emptyResponse = PokemonListResponse(
             count = 0,
             next = null,
@@ -218,10 +202,8 @@ class PokemonRepositoryImplTest {
         
         doReturn(emptyResponse).`when`(mockApiService).getPokemonList(100, 0)
 
-        // When
         val result = repository.getPokemonList(100, 0)
 
-        // Then
         assertTrue(result.isEmpty())
         verify(mockApiService).getPokemonList(100, 0)
     }

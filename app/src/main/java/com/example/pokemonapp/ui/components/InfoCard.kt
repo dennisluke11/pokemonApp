@@ -24,7 +24,7 @@ fun InfoCard(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = Dimens.spacingSmall)
             )
-            
+
             content()
         }
     }

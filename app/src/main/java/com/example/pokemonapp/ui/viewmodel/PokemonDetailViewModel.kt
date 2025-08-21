@@ -14,18 +14,18 @@ class PokemonDetailViewModel(
     private val repository: IPokeRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    
+
     private val pokemonId: Int = savedStateHandle["pokemonId"] ?: 1
-    
+
     private val _uiState = MutableStateFlow(PokemonDetailUiState())
     val uiState: StateFlow<PokemonDetailUiState> = _uiState.asStateFlow()
-    
+
     private var cachedPokemonDetail: PokemonDetail? = null
-    
+
     init {
         loadPokemonDetail()
     }
-    
+
     // Loads Pokemon detail from repository with caching
     fun loadPokemonDetail() {
         if (cachedPokemonDetail != null) {
@@ -35,7 +35,7 @@ class PokemonDetailViewModel(
             )
             return
         }
-        
+
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
@@ -53,11 +53,11 @@ class PokemonDetailViewModel(
             }
         }
     }
-    
+
     fun clearError() {
         _uiState.value = _uiState.value.copy(error = null)
     }
-    
+
     fun refreshData() {
         cachedPokemonDetail = null
         loadPokemonDetail()

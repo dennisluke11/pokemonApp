@@ -1,8 +1,15 @@
 package com.example.pokemonapp.ui.components
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -21,15 +28,15 @@ fun StatProgressBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = statName.replaceFirstChar { 
-                if (it.isLowerCase()) it.titlecase() else it.toString() 
+            text = statName.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase() else it.toString()
             },
             fontSize = Dimens.textSizeMedium,
             modifier = Modifier.weight(1f)
         )
-        
+
         Spacer(modifier = Modifier.width(Dimens.spacingMedium))
-        
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(Dimens.spacingMedium)
@@ -40,7 +47,7 @@ fun StatProgressBar(
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.primary
             )
-            
+
             LinearProgressIndicator(
                 progress = statValue.toFloat() / maxValue,
                 modifier = Modifier

@@ -2,27 +2,36 @@
 
 package com.example.pokemonapp.ui.screen
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import com.example.pokemonapp.data.model.PokemonListItem
-import com.example.pokemonapp.ui.components.*
+import com.example.pokemonapp.ui.components.ErrorMessage
+import com.example.pokemonapp.ui.components.LoadingIndicator
+import com.example.pokemonapp.ui.components.PokemonAppBar
+import com.example.pokemonapp.ui.components.PokemonCard
 import com.example.pokemonapp.ui.theme.Dimens
-import com.example.pokemonapp.ui.viewmodel.PokemonListUiState
 import com.example.pokemonapp.ui.viewmodel.PokemonListViewModel
 
 
@@ -32,22 +41,22 @@ fun PokemonListScreen(
     onPokemonClick: (Int) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    
+
     var searchQuery by rememberSaveable { mutableStateOf("") }
     val listState = rememberLazyListState()
-    
+
     val filteredList by remember(uiState.pokemonList, searchQuery) {
         derivedStateOf {
             if (searchQuery.isEmpty()) {
                 uiState.pokemonList
             } else {
-                uiState.pokemonList.filter { 
-                    it.name.contains(searchQuery, ignoreCase = true) 
+                uiState.pokemonList.filter {
+                    it.name.contains(searchQuery, ignoreCase = true)
                 }
             }
         }
     }
-    
+
     Scaffold(
         topBar = {
             PokemonAppBar(title = "PokéDex Pro")
@@ -60,21 +69,23 @@ fun PokemonListScreen(
         ) {
             SearchBar(
                 query = searchQuery,
-                onQueryChange = { 
+                onQueryChange = {
                     searchQuery = it
                     viewModel.searchPokemon(it)
                 }
             )
-            
+
             when {
                 uiState.isLoading && uiState.pokemonList.isEmpty() -> {
                     LoadingIndicator()
                 }
+
                 uiState.error != null -> {
                     ErrorMessage(
                         onDismiss = { viewModel.clearError() }
                     )
                 }
+
                 else -> {
                     PokemonList(
                         pokemonList = filteredList,
@@ -98,13 +109,13 @@ private fun SearchBar(
     OutlinedTextField(
         value = query,
         onValueChange = onQueryChange,
-                        modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = Dimens.paddingMedium, vertical = Dimens.paddingSmall),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimens.paddingMedium, vertical = Dimens.paddingSmall),
         placeholder = { Text("Search Pokémon...") },
         label = { Text("Search") },
         singleLine = true,
-                        shape = RoundedCornerShape(Dimens.cornerRadiusMedium)
+        shape = RoundedCornerShape(Dimens.cornerRadiusMedium)
     )
 }
 

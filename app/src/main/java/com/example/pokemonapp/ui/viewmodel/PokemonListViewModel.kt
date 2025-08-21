@@ -12,16 +12,16 @@ import kotlinx.coroutines.launch
 class PokemonListViewModel(
     private val repository: IPokeRepository
 ) : ViewModel() {
-    
+
     private val _uiState = MutableStateFlow(PokemonListUiState())
     val uiState: StateFlow<PokemonListUiState> = _uiState.asStateFlow()
-    
+
     private var cachedPokemonList: List<PokemonListItem>? = null
-    
+
     init {
         loadPokemonList()
     }
-    
+
     // Loads Pokemon list from repository with caching
     fun loadPokemonList() {
         if (cachedPokemonList != null) {
@@ -32,7 +32,7 @@ class PokemonListViewModel(
             )
             return
         }
-        
+
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             try {
@@ -51,13 +51,13 @@ class PokemonListViewModel(
             }
         }
     }
-    
+
     fun searchPokemon(query: String) {
         val filteredList = if (query.isEmpty()) {
             _uiState.value.pokemonList
         } else {
-            _uiState.value.pokemonList.filter { 
-                it.name.contains(query, ignoreCase = true) 
+            _uiState.value.pokemonList.filter {
+                it.name.contains(query, ignoreCase = true)
             }
         }
         _uiState.value = _uiState.value.copy(
@@ -65,11 +65,11 @@ class PokemonListViewModel(
             filteredList = filteredList
         )
     }
-    
+
     fun clearError() {
         _uiState.value = _uiState.value.copy(error = null)
     }
-    
+
     // Refreshes Pokemon list by clearing cache and reloading
     fun refreshData() {
         cachedPokemonList = null

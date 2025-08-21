@@ -8,12 +8,12 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
-    
+
     single { NetworkModule.pokemonApiService }
-    
+
     single<IPokeRepository> { PokemonRepositoryImpl(get()) }
-    
+
     viewModel { PokemonListViewModel(get()) }
-    
+
     viewModel { PokemonDetailViewModel(get(), get()) }
 }

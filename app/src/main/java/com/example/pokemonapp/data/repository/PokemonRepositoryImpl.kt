@@ -7,8 +7,7 @@ import com.example.pokemonapp.data.model.PokemonListItem
 class PokemonRepositoryImpl(
     private val apiService: PokemonApiService
 ) : IPokeRepository {
-    
-    // Gets paginated Pokemon list with error handling returning empty list on failure
+
     override suspend fun getPokemonList(limit: Int, offset: Int): List<PokemonListItem> {
         return try {
             val response = apiService.getPokemonList(limit, offset)
@@ -17,8 +16,7 @@ class PokemonRepositoryImpl(
             emptyList()
         }
     }
-    
-    // Gets Pokemon detail by ID with error handling
+
     override suspend fun getPokemonDetail(id: Int): PokemonDetail {
         return try {
             apiService.getPokemonDetail(id)
@@ -26,8 +24,7 @@ class PokemonRepositoryImpl(
             throw e
         }
     }
-    
-    // Gets Pokemon detail by name with error handling
+
     override suspend fun getPokemonDetailByName(name: String): PokemonDetail {
         return try {
             apiService.getPokemonDetailByName(name)

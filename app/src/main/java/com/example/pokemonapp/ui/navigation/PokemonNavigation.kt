@@ -37,11 +37,11 @@ fun PokemonNavigation(
                 }
             )
         }
-        
+
         composable(
             route = Screen.PokemonDetail.route,
             arguments = listOf(
-                navArgument("pokemonId") { 
+                navArgument("pokemonId") {
                     type = NavType.IntType
                     defaultValue = 1
                 }
@@ -50,7 +50,7 @@ fun PokemonNavigation(
             val viewModel: PokemonDetailViewModel = koinViewModel()
             PokemonDetailScreen(
                 viewModel = viewModel,
-                onBackClick = { 
+                onBackClick = {
                     try {
                         navController.popBackStack()
                     } catch (e: Exception) {
