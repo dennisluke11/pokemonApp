@@ -10,7 +10,10 @@ data class PokemonListResponse(
 data class PokemonListItem(
     val name: String,
     val url: String
-)
+) {
+    val id: Int
+        get() = url.split("/").dropLast(1).last().toIntOrNull() ?: 0
+}
 
 data class PokemonDetail(
     val id: Int,

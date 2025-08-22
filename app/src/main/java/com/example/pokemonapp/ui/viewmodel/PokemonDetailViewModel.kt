@@ -10,6 +10,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+sealed interface PokemonDetailUiState {
+    data object Loading : PokemonDetailUiState
+    data class Success(val detail: PokemonDetail) : PokemonDetailUiState
+    data class Error(val message: String) : PokemonDetailUiState
+}
+
 class PokemonDetailViewModel(
     private val repository: IPokeRepository,
     savedStateHandle: SavedStateHandle
@@ -17,7 +23,7 @@ class PokemonDetailViewModel(
 
     private val pokemonId: Int = savedStateHandle["pokemonId"] ?: 1
 
-    private val _uiState = MutableStateFlow(PokemonDetailUiState())
+    private val _uiState = MutableStateFlow<PokemonDetailUiState>(PokemonDetailUiState.Loading)
     val uiState: StateFlow<PokemonDetailUiState> = _uiState.asStateFlow()
 
     private var cachedPokemonDetail: PokemonDetail? = null
@@ -28,34 +34,27 @@ class PokemonDetailViewModel(
 
     // Loads Pokemon detail from repository with caching
     fun loadPokemonDetail() {
-        if (cachedPokemonDetail != null) {
-            _uiState.value = _uiState.value.copy(
-                pokemonDetail = cachedPokemonDetail,
-                isLoading = false
-            )
+        cachedPokemonDetail?.let { cachedDetail ->
+            _uiState.value = PokemonDetailUiState.Success(cachedDetail)
             return
         }
 
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            _uiState.value = PokemonDetailUiState.Loading
             try {
                 val pokemonDetail = repository.getPokemonDetail(pokemonId)
                 cachedPokemonDetail = pokemonDetail
-                _uiState.value = _uiState.value.copy(
-                    pokemonDetail = pokemonDetail,
-                    isLoading = false
-                )
+                _uiState.value = PokemonDetailUiState.Success(pokemonDetail)
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    error = e.message ?: "Unknown error",
-                    isLoading = false
+                _uiState.value = PokemonDetailUiState.Error(
+                    e.message ?: "Unknown error"
                 )
             }
         }
     }
 
     fun clearError() {
-        _uiState.value = _uiState.value.copy(error = null)
+        loadPokemonDetail()
     }
 
     fun refreshData() {
@@ -63,9 +62,3 @@ class PokemonDetailViewModel(
         loadPokemonDetail()
     }
 }
-
-data class PokemonDetailUiState(
-    val pokemonDetail: PokemonDetail? = null,
-    val isLoading: Boolean = false,
-    val error: String? = null
-)

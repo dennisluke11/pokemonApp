@@ -17,6 +17,7 @@ import com.example.pokemonapp.ui.theme.Dimens
 
 @Composable
 fun ErrorMessage(
+    message: String = "Oops, try again later!",
     onDismiss: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
@@ -28,7 +29,7 @@ fun ErrorMessage(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Oops, try again later!",
+            text = message,
             color = MaterialTheme.colorScheme.error,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.bodyLarge

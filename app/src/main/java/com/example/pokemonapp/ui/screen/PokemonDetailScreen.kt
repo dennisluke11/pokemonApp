@@ -36,6 +36,7 @@ import com.example.pokemonapp.ui.components.StatProgressBar
 import com.example.pokemonapp.ui.components.TypeChip
 import com.example.pokemonapp.ui.theme.Dimens
 import com.example.pokemonapp.ui.viewmodel.PokemonDetailViewModel
+import com.example.pokemonapp.ui.viewmodel.PokemonDetailUiState
 
 @Composable
 fun PokemonDetailScreen(
@@ -47,30 +48,35 @@ fun PokemonDetailScreen(
     Scaffold(
         topBar = {
             PokemonAppBar(
-                title = uiState.pokemonDetail?.name?.replaceFirstChar {
-                    if (it.isLowerCase()) it.titlecase() else it.toString()
-                } ?: "Pokémon Details",
+                title = when (val currentState = uiState) {
+                    is PokemonDetailUiState.Success -> currentState.detail.name.replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase() else it.toString()
+                    }
+
+                    else -> "Pokémon Details"
+                },
                 onBackClick = onBackClick
             )
         }
     ) { paddingValues ->
-        when {
-            uiState.isLoading -> {
+        when (val currentState = uiState) {
+            is PokemonDetailUiState.Loading -> {
                 LoadingIndicator(
                     modifier = Modifier.padding(paddingValues)
                 )
             }
 
-            uiState.error != null -> {
+            is PokemonDetailUiState.Error -> {
                 ErrorMessage(
+                    message = currentState.message,
                     onDismiss = { viewModel.clearError() },
                     modifier = Modifier.padding(paddingValues)
                 )
             }
 
-            uiState.pokemonDetail != null -> {
+            is PokemonDetailUiState.Success -> {
                 PokemonDetailContent(
-                    pokemon = uiState.pokemonDetail!!,
+                    pokemon = currentState.detail,
                     paddingValues = paddingValues
                 )
             }

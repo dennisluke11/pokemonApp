@@ -19,10 +19,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -33,6 +31,7 @@ import com.example.pokemonapp.ui.components.PokemonAppBar
 import com.example.pokemonapp.ui.components.PokemonCard
 import com.example.pokemonapp.ui.theme.Dimens
 import com.example.pokemonapp.ui.viewmodel.PokemonListViewModel
+import com.example.pokemonapp.ui.viewmodel.PokemonListUiState
 
 
 @Composable
@@ -44,18 +43,6 @@ fun PokemonListScreen(
 
     var searchQuery by rememberSaveable { mutableStateOf("") }
     val listState = rememberLazyListState()
-
-    val filteredList by remember(uiState.pokemonList, searchQuery) {
-        derivedStateOf {
-            if (searchQuery.isEmpty()) {
-                uiState.pokemonList
-            } else {
-                uiState.pokemonList.filter {
-                    it.name.contains(searchQuery, ignoreCase = true)
-                }
-            }
-        }
-    }
 
     Scaffold(
         topBar = {
@@ -75,25 +62,42 @@ fun PokemonListScreen(
                 }
             )
 
-            when {
-                uiState.isLoading && uiState.pokemonList.isEmpty() -> {
+            when (val currentState = uiState) {
+                is PokemonListUiState.Loading -> {
                     LoadingIndicator()
                 }
 
-                uiState.error != null -> {
+                is PokemonListUiState.Error -> {
                     ErrorMessage(
+                        message = currentState.message,
                         onDismiss = { viewModel.clearError() }
                     )
                 }
 
-                else -> {
+                is PokemonListUiState.Empty -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "No Pokémon found",
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+                    }
+                }
+
+                is PokemonListUiState.Success -> {
+                    val displayList = if (searchQuery.isEmpty()) {
+                        currentState.all
+                    } else {
+                        currentState.filtered
+                    }
+
                     PokemonList(
-                        pokemonList = filteredList,
+                        pokemonList = displayList,
                         listState = listState,
-                        onPokemonClick = { pokemon ->
-                            val id = pokemon.url.split("/").dropLast(1).last().toIntOrNull()
-                            id?.let { onPokemonClick(it) }
-                        }
+                        onPokemonClick = onPokemonClick
                     )
                 }
             }
@@ -123,7 +127,7 @@ private fun SearchBar(
 private fun PokemonList(
     pokemonList: List<PokemonListItem>,
     listState: LazyListState,
-    onPokemonClick: (PokemonListItem) -> Unit
+    onPokemonClick: (Int) -> Unit
 ) {
     LazyColumn(
         state = listState,
@@ -131,10 +135,15 @@ private fun PokemonList(
         contentPadding = PaddingValues(Dimens.paddingMedium),
         verticalArrangement = Arrangement.spacedBy(Dimens.spacingSmall)
     ) {
-        items(pokemonList) { pokemon ->
+        items(
+            items = pokemonList,
+            key = { pokemon ->
+                pokemon.id
+            }
+        ) { pokemon ->
             PokemonCard(
                 pokemon = pokemon,
-                onClick = { onPokemonClick(pokemon) }
+                onClick = { onPokemonClick(pokemon.id) }
             )
         }
     }

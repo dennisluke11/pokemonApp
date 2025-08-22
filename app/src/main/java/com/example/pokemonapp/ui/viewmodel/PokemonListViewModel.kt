@@ -9,11 +9,23 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+sealed interface PokemonListUiState {
+    data object Loading : PokemonListUiState
+    data class Success(
+        val all: List<PokemonListItem>,
+        val filtered: List<PokemonListItem>,
+        val query: String
+    ) : PokemonListUiState
+
+    data class Error(val message: String) : PokemonListUiState
+    data object Empty : PokemonListUiState
+}
+
 class PokemonListViewModel(
     private val repository: IPokeRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(PokemonListUiState())
+    private val _uiState = MutableStateFlow<PokemonListUiState>(PokemonListUiState.Loading)
     val uiState: StateFlow<PokemonListUiState> = _uiState.asStateFlow()
 
     private var cachedPokemonList: List<PokemonListItem>? = null
@@ -24,50 +36,57 @@ class PokemonListViewModel(
 
     // Loads Pokemon list from repository with caching
     fun loadPokemonList() {
-        if (cachedPokemonList != null) {
-            _uiState.value = _uiState.value.copy(
-                pokemonList = cachedPokemonList!!,
-                filteredList = cachedPokemonList!!,
-                isLoading = false
+        cachedPokemonList?.let { cachedList ->
+            _uiState.value = PokemonListUiState.Success(
+                all = cachedList,
+                filtered = cachedList,
+                query = ""
             )
             return
         }
 
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            _uiState.value = PokemonListUiState.Loading
             try {
                 val pokemonList = repository.getPokemonList()
                 cachedPokemonList = pokemonList
-                _uiState.value = _uiState.value.copy(
-                    pokemonList = pokemonList,
-                    filteredList = pokemonList,
-                    isLoading = false
-                )
+                if (pokemonList.isEmpty()) {
+                    _uiState.value = PokemonListUiState.Empty
+                } else {
+                    _uiState.value = PokemonListUiState.Success(
+                        all = pokemonList,
+                        filtered = pokemonList,
+                        query = ""
+                    )
+                }
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(
-                    error = e.message ?: "Unknown error",
-                    isLoading = false
+                _uiState.value = PokemonListUiState.Error(
+                    e.message ?: "Unknown error"
                 )
             }
         }
     }
 
     fun searchPokemon(query: String) {
-        val filteredList = if (query.isEmpty()) {
-            _uiState.value.pokemonList
-        } else {
-            _uiState.value.pokemonList.filter {
-                it.name.contains(query, ignoreCase = true)
+        val currentState = _uiState.value
+        if (currentState is PokemonListUiState.Success) {
+            val filteredList = if (query.isEmpty()) {
+                currentState.all
+            } else {
+                currentState.all.filter {
+                    it.name.contains(query, ignoreCase = true)
+                }
             }
+            _uiState.value = PokemonListUiState.Success(
+                all = currentState.all,
+                filtered = filteredList,
+                query = query
+            )
         }
-        _uiState.value = _uiState.value.copy(
-            searchQuery = query,
-            filteredList = filteredList
-        )
     }
 
     fun clearError() {
-        _uiState.value = _uiState.value.copy(error = null)
+        loadPokemonList()
     }
 
     // Refreshes Pokemon list by clearing cache and reloading
@@ -76,11 +95,3 @@ class PokemonListViewModel(
         loadPokemonList()
     }
 }
-
-data class PokemonListUiState(
-    val pokemonList: List<PokemonListItem> = emptyList(),
-    val filteredList: List<PokemonListItem> = emptyList(),
-    val searchQuery: String = "",
-    val isLoading: Boolean = false,
-    val error: String? = null
-)

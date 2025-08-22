@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Background circle -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,54m-50,0a50,50 0,1 1,100 0a50,50 0,1 1,-100 0" />
+    
+    <!-- Top half (red) -->
+    <path
+        android:fillColor="#DC0A2D"
+        android:pathData="M54,4C26.39,4 4,26.39 4,54L104,54C104,26.39 81.61,4 54,4Z" />
+    
+    <!-- Middle black band -->
+    <path
+        android:fillColor="#2C2C54"
+        android:pathData="M4,48L104,48L104,60L4,60Z" />
+    
+    <!-- Center circle (white) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,54m-12,0a12,12 0,1 1,24 0a12,12 0,1 1,-24 0" />
+    
+    <!-- Center circle border -->
+    <path
+        android:fillColor="#2C2C54"
+        android:strokeWidth="2"
+        android:pathData="M54,54m-12,0a12,12 0,1 1,24 0a12,12 0,1 1,-24 0"
+        android:fillType="nonZero" />
+    
+    <!-- Inner center circle -->
+    <path
+        android:fillColor="#2C2C54"
+        android:pathData="M54,54m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0" />
+</vector>

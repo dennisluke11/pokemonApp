@@ -51,13 +51,7 @@ fun PokemonNavigation(
             PokemonDetailScreen(
                 viewModel = viewModel,
                 onBackClick = {
-                    try {
-                        navController.popBackStack()
-                    } catch (e: Exception) {
-                        navController.navigate(Screen.PokemonList.route) {
-                            popUpTo(Screen.PokemonList.route) { inclusive = true }
-                        }
-                    }
+                    navController.popBackStack()
                 }
             )
         }

@@ -20,32 +20,32 @@ private val DarkColorScheme = darkColorScheme(
     primary = PokemonRed,
     secondary = PokemonYellow,
     tertiary = PokemonLightBlue,
-    background = PokemonBlue,
-    surface = PokemonBlue,
-    onPrimary = Color.White,
-    onSecondary = PokemonBlue,
-    onTertiary = PokemonBlue,
-    onBackground = Color.White,
-    onSurface = Color.White
+    background = PokemonGray,
+    surface = PokemonGray,
+    onPrimary = PokemonWhite,
+    onSecondary = PokemonGray,
+    onTertiary = PokemonGray,
+    onBackground = PokemonWhite,
+    onSurface = PokemonWhite
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = PokemonRed,
     secondary = PokemonYellow,
-    tertiary = PokemonLightBlue,
-    background = PokemonLightBlue,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = PokemonBlue,
-    onTertiary = PokemonBlue,
-    onBackground = PokemonBlue,
-    onSurface = PokemonBlue
+    tertiary = PokemonBlue,
+    background = PokemonLightGray,
+    surface = PokemonWhite,
+    onPrimary = PokemonWhite,
+    onSecondary = PokemonGray,
+    onTertiary = PokemonWhite,
+    onBackground = PokemonGray,
+    onSurface = PokemonGray
 )
 
 @Composable
 fun PokemonAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false, // Disable dynamic colors to use Pokemon theme
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -61,7 +61,7 @@ fun PokemonAppTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
+            WindowCompat.setDecorFitsSystemWindows(window, false)
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
