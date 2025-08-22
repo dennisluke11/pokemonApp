@@ -21,11 +21,19 @@ A modern Android application that serves as a mini Pokédex, built with Jetpack 
 ## 📸 Screenshots
 
 ### 🏠 Landing Screen (Pokemon List)
-![Pokemon List Screen](screenshots/landing_screen.png)
+<p>
+  <img src="https://github.com/user-attachments/assets/8cd6c002-b857-498e-b531-67d0d00290f5" alt="Landing page" width="300">
+</p>
+
 *The main landing screen showing the Pokemon list with search functionality, featuring a red header bar and dark blue background. Displays Pokemon cards with images, names, and Pokedex numbers.*
 
 ### 🔍 Details Screen (Pokemon Information)
-![Pokemon Detail Screen](screenshots/details_screen.png)
+<p>
+  <img src="https://github.com/user-attachments/assets/5bb6315d-2a88-47bd-8929-e2c58619f12a" alt="Details page" width="300">
+</p>
+
+
+
 *The Pokemon details screen showing comprehensive information including stats, types, abilities, and high-quality images. Features the same red header with Pokemon-specific theming.*
 
 
