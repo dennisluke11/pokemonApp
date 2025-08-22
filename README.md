@@ -5,10 +5,11 @@ A modern Android application that serves as a mini Pokédex, built with Jetpack 
 ## 📱 Features
 
 ### 🏠 Home Screen
-- **Pokémon List**: Displays the first 100 Pokémon from the PokéAPI
+- **Pokémon List**: Displays the first 151 Pokémon from the PokéAPI (complete original Pokedex)
 - **Search Functionality**: Real-time search with case-insensitive filtering
-- **Pokémon Images**: Front sprites with loading states and error handling
+- **Pokémon Images**: High-quality sprites with loading states and error handling
 - **Responsive Design**: Optimized for different screen orientations
+- **Smooth Scrolling**: LazyColumn with proper keys for optimal performance
 
 ### 🔍 Detail Screen
 - **Pokémon Information**: Name, ID, and comprehensive details
@@ -16,6 +17,18 @@ A modern Android application that serves as a mini Pokédex, built with Jetpack 
 - **Base Stats**: Visual representation with progress bars
 - **Types & Abilities**: Combined display in organized cards
 - **Platform Design**: Follows Material Design 3 principles
+
+## 📸 Screenshots
+
+### 🏠 Landing Screen (Pokemon List)
+![Pokemon List Screen](screenshots/pokemon_list_screen.png)
+*The main landing screen showing the Pokemon list with search functionality, featuring a red header bar and dark blue background. Displays Pokemon cards with images, names, and Pokedex numbers.*
+
+### 🔍 Details Screen (Pokemon Information)
+![Pokemon Detail Screen](screenshots/pokemon_detail_screen.png)
+*The Pokemon details screen showing comprehensive information including stats, types, abilities, and high-quality images. Features the same red header with Pokemon-specific theming.*
+
+
 
 ## 🏗️ Architecture
 
@@ -141,3 +154,24 @@ app/src/main/java/com/example/pokemonapp/
 ## 🔮 Future Enhancements
 
 - Offline support with local database
+- Pagination for larger Pokemon lists
+- Favorite Pokemon functionality
+- Advanced filtering and sorting options
+- Pokemon evolution chains
+- Move sets and learnable moves
+
+## 🆕 Recent Improvements
+
+### ✅ **Critical Fixes Applied**
+- **Pokemon Limit**: Increased from 100 to 151 Pokemon (complete original Pokedex)
+- **Crash Prevention**: Fixed Koin initialization issues
+- **Null Safety**: Removed all force unwrapping (!!) operators
+- **UI States**: Converted to sealed classes for better type safety
+- **Scrolling**: Fixed LazyColumn performance with proper keys
+
+### 🎨 **UI/UX Enhancements**
+- **Custom App Icon**: Beautiful Pokeball design
+- **Authentic Colors**: Pokemon Red/Blue color scheme
+- **Better Navigation**: Simplified and more reliable
+- **Error Handling**: Improved user feedback and recovery
+- **Performance**: Optimized image loading and state management
